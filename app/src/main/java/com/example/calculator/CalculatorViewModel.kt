@@ -36,6 +36,11 @@ class CalculatorViewModel: ViewModel() {
     }
 
     private fun enterOperator(operation: CalculatorOperation) {
+
+        if (state.operation != null) {
+            performCalculation()
+        }
+
         if (state.number1.isNotBlank()) {
             state = state.copy(operation = operation)
         }
@@ -64,7 +69,7 @@ class CalculatorViewModel: ViewModel() {
             }
 
             state = state.copy(
-                number1 = result.toString(),
+                number1 = removeTrailingZeros(result.toString()),
                 number2 = "",
                 operation = null
             )
@@ -80,6 +85,14 @@ class CalculatorViewModel: ViewModel() {
 
         if (state.number2.length >= MAX_NUMBER_LENGTH) return
         state = state.copy(number2 = state.number2 + number)
+    }
+
+    private fun removeTrailingZeros(num: String): String {
+        if(!num.contains('.'))
+            return num
+        return num
+            .dropLastWhile { it == '0' }
+            .dropLastWhile { it == '.' }
     }
 
     companion object {
